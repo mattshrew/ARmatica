@@ -10,7 +10,7 @@ public class Request : MonoBehaviour
     void Start()
     {
         string uri = "https://classic-collie-ultimately.ngrok-free.app/getfile";
-        string fileName = "model.fbx";
+        string fileName = "files.zip";
         string filePath = Path.Combine(UnityEngine.Application.persistentDataPath, fileName);
 
         StartCoroutine(DownloadFBX(uri, filePath));
@@ -32,7 +32,7 @@ public class Request : MonoBehaviour
         }
         else
         {
-            UnityEngine.Debug.Log($"FBX file downloaded to: {path}");
+            UnityEngine.Debug.Log($"ZIP file downloaded to: {path}");
         }
     }
 }
