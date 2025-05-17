@@ -51,13 +51,20 @@ public class RuntimeModelLoader : MonoBehaviour
 
     private void CleanUpImportedModel(GameObject root)
     {
-        Transform[] allChildren = root.GetComponentsInChildren<Transform>(true);
+        string[] namesToDelete = { "cube", "camera", "light" };
 
-        foreach (Transform child in allChildren)
+        // Iterate through children in reverse to safely delete
+        for (int i = root.transform.childCount - 1; i >= 0; i--)
         {
-            if (child.GetComponent<Camera>() != null || child.GetComponent<Light>() != null)
+            Transform child = root.transform.GetChild(i);
+
+            foreach (string name in namesToDelete)
             {
-                GameObject.Destroy(child.gameObject);
+                if (child.name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    DestroyImmediate(child.gameObject);
+                    break;
+                }
             }
         }
     }
