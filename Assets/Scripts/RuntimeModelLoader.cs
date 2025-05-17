@@ -13,8 +13,10 @@ public class RuntimeModelLoader : MonoBehaviour
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
             var assetLoaderFilePicker = AssetLoaderFilePicker.Create();
             assetLoaderFilePicker.LoadModelFromFilePickerAsync("Select a 3D Model", OnLoad, OnMaterialsLoad, OnProgress, OnBeginLoad, OnError, null, assetLoaderOptions);
+
         }
     }
+
 
     private void OnBeginLoad(bool anyModelSelected)
     {

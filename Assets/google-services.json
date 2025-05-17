@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "445670578490",
+    "project_id": "armatica-9be49",
+    "storage_bucket": "armatica-9be49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445670578490:android:bff170fafa0c016eac9803",
+        "android_client_info": {
+          "package_name": "com.UnityTechnologies.com.unity.template.urpblank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbQKlQte3xQU2lLgF34m6qYwzeKVpFne4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
