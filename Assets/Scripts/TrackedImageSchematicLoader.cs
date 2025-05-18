@@ -51,10 +51,11 @@ public class TrackedImageSchematicLoader : MonoBehaviour
 
         instructionText.GetComponent<TMP_Text>().text = $"Building {prefab.name}...";
 
-        currentSchematic = Instantiate(prefab, trackedImage.transform);
-        currentSchematic.transform.localPosition = spawnOffset != null ? spawnOffset.localPosition : Vector3.zero;
-        currentSchematic.transform.localRotation = spawnOffset != null ? spawnOffset.localRotation : Quaternion.identity;
-        currentSchematic.transform.localScale = spawnOffset != null ? spawnOffset.localScale : Vector3.one;
+        // Instantiate the prefab as a direct child of the tracked image
+        currentSchematic = Instantiate(prefab, trackedImage.transform.position, trackedImage.transform.rotation, trackedImage.transform);
+
+        // Match scale (optional: ensure scale is relative to the image size)
+        currentSchematic.transform.localScale = Vector3.one;
 
         instructionText.SetActive(false);
     }

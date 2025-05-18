@@ -12,8 +12,6 @@ public class Request : MonoBehaviour
 
     void Start()
     {
-        schematicUIManager.start = true;
-        return;
         string uri = "https://classic-collie-ultimately.ngrok-free.app/getfile";
         string fileName = "files.zip";
 

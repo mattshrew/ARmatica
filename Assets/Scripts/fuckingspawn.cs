@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.IO;
 using TriLibCore;
 using TriLibCore.General;
@@ -80,7 +81,32 @@ public class fuckingspawn : MonoBehaviour
         loadedObject.transform.localRotation = Quaternion.identity;
         loadedObject.transform.localScale = Vector3.one;
 
+        loadedObject.transform.position += new Vector3(125f, 50f, 0);
         loadedObject.SetActive(true);
+
+        NormalizeModel(loadedObject);
+    }
+
+    private void NormalizeModel(GameObject model)
+    {
+        Bounds bounds = GetBounds(model);
+        float maxSize = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
+        float scaleFactor = 0.1f / maxSize; // Shrink large models to fit within 0.1 units
+
+
+        model.transform.localScale = Vector3.one * scaleFactor;
+    }
+
+    private Bounds GetBounds(GameObject obj)
+    {
+        Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0) return new Bounds(Vector3.zero, Vector3.one);
+        Bounds bounds = renderers[0].bounds;
+        foreach (var r in renderers)
+        {
+            bounds.Encapsulate(r.bounds);
+        }
+        return bounds;
     }
 
     private void CleanUpImportedModel(GameObject root)

@@ -1061,7 +1061,7 @@ MonoBehaviour:
   schematicLoader: {fileID: 1037150412}
   instructionText: {fileID: 871698433}
   loadingText: {fileID: 1348111199}
-  fileName: 
+  fileNom: 
   menuOpen: 0
   start: 0
 --- !u!4 &479689215
@@ -1344,7 +1344,7 @@ MonoBehaviour:
       m_Calls: []
   m_SerializedLibrary: {fileID: 11400000, guid: b4c8f1418bbfb5b4d8a9ee8a0f7f1bf8, type: 2}
   m_MaxNumberOfMovingImages: 0
-  m_TrackedImagePrefab: {fileID: 0}
+  m_TrackedImagePrefab: {fileID: 8625372138084594550, guid: 4352d1cca2a166a42815d451d63222ed, type: 3}
 --- !u!114 &773190231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1385,7 +1385,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 773190229}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d090e3d31cfe6bd488897e1b33ab08cc, type: 3}
   m_Name: 
