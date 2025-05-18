@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.IO;
 
 public class SchematicUIManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class SchematicUIManager : MonoBehaviour
     public TrackedImageSchematicLoader schematicLoader;
     public GameObject instructionText;
     public bool menuOpen = false;
+    public string path = "/storage/emulated/0/Download/ARmatica";
 
     void Start()
     {
@@ -28,23 +30,29 @@ public class SchematicUIManager : MonoBehaviour
         menuButton.GetComponent<Button>().onClick.AddListener(toggleMenu);
         exitButton.GetComponent<Button>().onClick.AddListener(toggleMenu);
 
-        GameObject[] prefabs = Resources.LoadAll<GameObject>("Schematics");
-
-        foreach (GameObject prefab in prefabs)
+        if (!Directory.Exists(path))
         {
+            Debug.LogError($"Folder not found: ${path}");
+            return;
+        }
+
+        string[] fbxFiles = Directory.GetFiles(path, "*.fbx");
+
+        foreach(string _path in fbxFiles)
+        {
+            string name = Path.GetFileName(_path);
             GameObject buttonObj = Instantiate(buttonTemplate, buttonParent);
             buttonObj.SetActive(true);
-            buttonObj.GetComponentInChildren<TMP_Text>().text = prefab.name;
+            buttonObj.GetComponentInChildren<TMP_Text>().text = name;
 
-            string prefabName = prefab.name;
             buttonObj.GetComponent<Button>().onClick.AddListener(() =>
             {
-                schematicLoader.selectedSchematicName = prefabName;
+                schematicLoader.selectedSchematicName = name;
                 toggleMenu();
                 menuButton.SetActive(false);
                 instructionText.SetActive(true);
                 instructionText.GetComponent<TMP_Text>().text = "Scanning...";
-                Debug.Log("Selected schematic: " + prefabName);
+                Debug.Log("Selected schematic: " + name);
             });
         }
     }
