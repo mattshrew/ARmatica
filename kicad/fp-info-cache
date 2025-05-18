@@ -1,4 +1,4 @@
-24301931206712819
+24308921378239373
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -370,6 +370,34 @@ Half-Breadboard
 0
 400
 5
+Breadboarding
+Jumper-Wire_2.5mm_Blue
+jumper wire 8mm blue
+jumper wire
+0
+2
+2
+Breadboarding
+Jumper-Wire_2.5mm_Red
+jumper wire 8mm blue
+jumper wire
+0
+2
+2
+Breadboarding
+Jumper-Wire_5mm_Blue
+jumper wire 8mm blue
+jumper wire
+0
+2
+2
+Breadboarding
+Jumper-Wire_5mm_Red
+jumper wire 8mm blue
+jumper wire
+0
+2
+2
 Breadboarding
 Jumper-Wire_8mm_Blue
 jumper wire 8mm blue
