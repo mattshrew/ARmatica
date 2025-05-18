@@ -6,6 +6,7 @@ import zipfile
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "files/"
+app.config["OUTPUT_FOLDER"] = "output/"
 cors = CORS(app)  # allow CORS for all domains on all routes.
 app.config["CORS_HEADERS"] = "Content-Type"
 
@@ -32,7 +33,7 @@ def uploadFile():
     os.system(
         "bash ../conversion/kicadPcbToFbx.sh "
         + os.path.join(app.config["UPLOAD_FOLDER"], "breadboard.kicad_pcb")
-        + " files"
+        + " output"
     )
     os.remove(os.path.join(app.config["UPLOAD_FOLDER"], "breadboard.kicad_pcb"))
     print("converted file")
@@ -43,13 +44,13 @@ def uploadFile():
 @cross_origin()
 def getFile():
     zipf = zipfile.ZipFile("output.zip", "w", zipfile.ZIP_DEFLATED)
-    if len(os.listdir(app.config["UPLOAD_FOLDER"])) == 0:
+    if len(os.listdir(app.config["OUTPUT_FOLDER"])) == 0:
         return make_response("not yet", 200)
 
-    for root, dirs, files in os.walk(app.config["UPLOAD_FOLDER"]):
+    for root, dirs, files in os.walk(app.config["OUTPUT_FOLDER"]):
         for file in files:
-            zipf.write(app.config["UPLOAD_FOLDER"] + file)
-            os.remove(app.config["UPLOAD_FOLDER"] + file)
+            zipf.write(app.config["OUTPUT_FOLDER"] + file)
+            os.remove(app.config["OUTPUT_FOLDER"] + file)
     zipf.close()
 
     @after_this_request
