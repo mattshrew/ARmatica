@@ -43,14 +43,18 @@ def uploadFile():
 @app.route("/getfile", methods=["GET"])
 @cross_origin()
 def getFile():
+    try:
+        os.remove("output.zip")
+    except OSError:
+        pass
     zipf = zipfile.ZipFile("output.zip", "w", zipfile.ZIP_DEFLATED)
     if len(os.listdir(app.config["OUTPUT_FOLDER"])) == 0:
         return make_response("not yet", 200)
 
     for root, dirs, files in os.walk(app.config["OUTPUT_FOLDER"]):
         for file in files:
-            zipf.write(app.config["OUTPUT_FOLDER"] + file)
-            os.remove(app.config["OUTPUT_FOLDER"] + file)
+            zipf.write(os.path.join(app.config["OUTPUT_FOLDER"], file))
+            # os.remove(os.path.join(app.config["OUTPUT_FOLDER"], file))
     zipf.close()
 
     @after_this_request
