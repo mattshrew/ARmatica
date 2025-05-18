@@ -7,11 +7,11 @@ else
         prev=$PWD
         cd "${0%/*}"
         # Replace these with the paths to the binaries
-        /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export step "$prev/$1" --subst-models
+        /Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli pcb export step "$prev/$1" -o "breadboard.step" --subst-models
         /Applications/FreeCAD.app/Contents/Resources/bin/freecad ./stepToGltfFreeCAD.py
         /Applications/Blender.app/Contents/MacOS/Blender --background --python ./gltfToFbxBlender.py
         if [ -n "$2" ]; then
-            timestamp=$(date +"%Y%m%d%H%M")
+            timestamp=$(date +"%Y%m%d%H%M%S")
             mv model.fbx "$prev/$2/model_$timestamp.fbx"
         fi
         rm breadboard.step model.bin
