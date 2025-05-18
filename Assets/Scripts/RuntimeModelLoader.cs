@@ -1,28 +1,30 @@
+using System;
 using System.Diagnostics;
+using System.IO;
 using TriLibCore;
 using TriLibCore.General;
 using UnityEngine;
 
 public class RuntimeModelLoader : MonoBehaviour
 {
+    // Set this to the absolute path of your model file
+    private string modelFilePath = "C:\\Users\\amitw\\Downloads\\breadboar.fbx"; // Example path on Android
+
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button"))
+        if (GUI.Button(new Rect(10, 10, 150, 100), "Load Model"))
         {
-            print("You clicked the button!");
+            if (!File.Exists(modelFilePath))
+            {
+                UnityEngine.Debug.LogError($"Model file not found at path: {modelFilePath}");
+                return;
+            }
+
+            UnityEngine.Debug.Log($"Attempting to load model from path: {modelFilePath}");
+
             var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
-            var assetLoaderFilePicker = AssetLoaderFilePicker.Create();
-            assetLoaderFilePicker.LoadModelFromFilePickerAsync("Select a 3D Model", OnLoad, OnMaterialsLoad, OnProgress, OnBeginLoad, OnError, null, assetLoaderOptions);
 
-        }
-    }
-
-
-    private void OnBeginLoad(bool anyModelSelected)
-    {
-        if (!anyModelSelected)
-        {
-            UnityEngine.Debug.Log("No model selected.");
+            AssetLoader.LoadModelFromFile(modelFilePath, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
         }
     }
 
@@ -55,14 +57,12 @@ public class RuntimeModelLoader : MonoBehaviour
     {
         string[] namesToDelete = { "cube", "camera", "light" };
 
-        // Iterate through children in reverse to safely delete
         for (int i = root.transform.childCount - 1; i >= 0; i--)
         {
             Transform child = root.transform.GetChild(i);
-
             foreach (string name in namesToDelete)
             {
-                if (child.name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
+                if (child.name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     DestroyImmediate(child.gameObject);
                     break;
@@ -71,13 +71,12 @@ public class RuntimeModelLoader : MonoBehaviour
         }
     }
 
-
     private void ConvertMaterialsToURPLit(GameObject root)
     {
         Shader urpLitShader = Shader.Find("Universal Render Pipeline/Lit");
         if (urpLitShader == null)
         {
-            UnityEngine.Debug.LogError("URP Lit Shader not found. Make sure URP is installed and set up.");
+            UnityEngine.Debug.LogError("URP Lit Shader not found. Ensure URP is installed and set up correctly.");
             return;
         }
 
@@ -92,7 +91,6 @@ public class RuntimeModelLoader : MonoBehaviour
 
                 Material newMat = new Material(urpLitShader);
 
-                // Attempt to preserve textures and colors
                 if (originalMat.HasProperty("_MainTex"))
                     newMat.SetTexture("_BaseMap", originalMat.GetTexture("_MainTex"));
 
