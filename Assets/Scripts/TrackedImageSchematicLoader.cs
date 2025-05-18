@@ -8,12 +8,10 @@ using UnityEngine.XR.ARSubsystems;
 public class TrackedImageSchematicLoader : MonoBehaviour
 {
     [SerializeField] private ARTrackedImageManager trackedImageManager;
-    public Transform spawnOffset; // optional empty GameObject to tweak relative placement
+    public Transform spawnOffset;
     private GameObject currentSchematic;
     public GameObject instructionText;
 
-    [Header("Set from UI or code")]
-    public string selectedSchematicName = "";
 
     void OnEnable()
     {
@@ -43,12 +41,11 @@ public class TrackedImageSchematicLoader : MonoBehaviour
 
     void TryPlaceSchematic(ARTrackedImage trackedImage)
     {
-        if (string.IsNullOrEmpty(selectedSchematicName)) return;
 
-        GameObject prefab = Resources.Load<GameObject>($"Schematics/{selectedSchematicName}");
+        GameObject prefab = Resources.Load<GameObject>($"Schematics/scriptfab");
         if (prefab == null)
         {
-            Debug.LogError($"Schematic '{selectedSchematicName}' not found in Resources/Schematics");
+            Debug.LogError($"Schematic 'scriptfab' not found in Resources/Schematics");
             return;
         }
 

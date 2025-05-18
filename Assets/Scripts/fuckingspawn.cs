@@ -1,50 +1,86 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using TriLibCore;
 using TriLibCore.General;
 using UnityEngine;
 
-
 public class fuckingspawn : MonoBehaviour
-{ // Example path on Android
-    public TrackedImageSchematicLoader schematicLoader;
-    // private string modelFolderPath = $"/storage/emulated/0/Download/ARmatica/{schematicLoader.selectedSchematicName}";
-    private string modelFilePath = "/storage/emulated/0/Download/ARmatica/model_202505172053.fbx";
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+{
+    private string modelFilePath;
+
+    private void Start()
     {
+        if (SchematicUIManager.Instance == null)
+        {
+            UnityEngine.Debug.LogError("SchematicUIManager instance is null.");
+            return;
+        }
+
+        string selectedSchematicName = SchematicUIManager.Instance.GetFileName();
+        UnityEngine.Debug.Log($"Selected schematic: {selectedSchematicName}");
+
+        if (string.IsNullOrEmpty(selectedSchematicName))
+        {
+            UnityEngine.Debug.LogError("Selected schematic name is empty or null.");
+            return;
+        }
+
+        modelFilePath = Path.Combine(UnityEngine.Application.persistentDataPath, "ARmatica", selectedSchematicName);
         UnityEngine.Debug.Log($"Attempting to load model from path: {modelFilePath}");
 
-        var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+        if (!File.Exists(modelFilePath))
+        {
+            UnityEngine.Debug.LogError("Model file does not exist: " + modelFilePath);
+            return;
+        }
 
-        AssetLoader.LoadModelFromFile(modelFilePath, OnLoad, OnMaterialsLoad, OnProgress, OnError, null, assetLoaderOptions);
+        var assetLoaderOptions = AssetLoader.CreateDefaultLoaderOptions();
+        AssetLoader.LoadModelFromFile(
+            modelFilePath,
+            OnLoad,
+            OnMaterialsLoad,
+            OnProgress,
+            OnError,
+            null,
+            assetLoaderOptions
+        );
     }
 
-
-    private void OnProgress(AssetLoaderContext assetLoaderContext, float progress)
+    private void OnProgress(AssetLoaderContext context, float progress)
     {
         UnityEngine.Debug.Log($"Loading progress: {progress * 100f}%");
     }
 
-    private void OnError(IContextualizedError contextualizedError)
+    private void OnError(IContextualizedError error)
     {
-        UnityEngine.Debug.LogError($"Error loading model: {contextualizedError.GetInnerException()}");
+        UnityEngine.Debug.LogError($"Error loading model: {error.GetInnerException()}");
     }
 
-    private void OnLoad(AssetLoaderContext assetLoaderContext)
+    private void OnLoad(AssetLoaderContext context)
     {
-        var loadedGameObject = assetLoaderContext.RootGameObject;
-        loadedGameObject.SetActive(false);
+        if (context?.RootGameObject != null)
+        {
+            // Don't show until materials are loaded
+            context.RootGameObject.SetActive(false);
+        }
     }
 
-    private void OnMaterialsLoad(AssetLoaderContext assetLoaderContext)
+    private void OnMaterialsLoad(AssetLoaderContext context)
     {
-        var loadedGameObject = assetLoaderContext.RootGameObject;
-        CleanUpImportedModel(loadedGameObject);
-        ConvertMaterialsToURPLit(loadedGameObject);
-        loadedGameObject.SetActive(true);
-        loadedGameObject.transform.position = Vector3.zero;
+        if (context?.RootGameObject == null) return;
+
+        GameObject loadedObject = context.RootGameObject;
+
+        CleanUpImportedModel(loadedObject);
+        ConvertMaterialsToURPLit(loadedObject);
+
+        // Attach to the prefab (which is already under the tracked image)
+        loadedObject.transform.SetParent(transform, false);
+        loadedObject.transform.localPosition = Vector3.zero;
+        loadedObject.transform.localRotation = Quaternion.identity;
+        loadedObject.transform.localScale = Vector3.one;
+
+        loadedObject.SetActive(true);
     }
 
     private void CleanUpImportedModel(GameObject root)
